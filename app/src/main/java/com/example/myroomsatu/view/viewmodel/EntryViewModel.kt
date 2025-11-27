@@ -1,45 +1,54 @@
-package com.example.myroomsatu.view.viewmodel
+package com.example.myroomsatu.viewmodel
 
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.myroomsatu.repositori.RepositoriSiswa
-import com.example.myroomsatu.room.Siswa
+import com.example.myroomsatu.data.Siswa
 
 class EntryViewModel(private val repositoriSiswa: RepositoriSiswa) : ViewModel() {
 
-    var uiStateSiswa by mutableIntStateOf(value = UIStateSiswa())
+    var uiStateSiswa by mutableStateOf(value = UIStateSiswa())
         private set
 
-    private fun validasiInput(uiState: DetailSiswa): Boolean {
-        return with(receiver = uiState) {
+    private fun validasiInput(uiState: DetailSiswa = uiStateSiswa.detailSiswa): Boolean {
+        return with(uiState) {
             nama.isNotBlank() && alamat.isNotBlank() && telpon.isNotBlank()
         }
     }
+
     fun updateUIState(detailSiswa: DetailSiswa) {
         uiStateSiswa =
             UIStateSiswa(detailSiswa = detailSiswa, isEntryValid = validasiInput(uiState = detailSiswa))
     }
+
     suspend fun saveSiswa() {
-        if (validasiInput(uiStateSiswa.detailSiswa)) {
+        if (validasiInput()) {
             repositoriSiswa.insertSiswa(siswa = uiStateSiswa.detailSiswa.toSiswa())
         }
     }
+
     data class UIStateSiswa(
         val detailSiswa: DetailSiswa = DetailSiswa(),
         val isEntryValid: Boolean = false
     )
+
     data class DetailSiswa(
         val id: Int = 0,
         val nama: String = "",
         val alamat: String = "",
         val telpon: String = ""
     )
+
     fun DetailSiswa.toSiswa(): Siswa = Siswa(
         id = id,
         nama = nama,
         alamat = alamat,
         telpon = telpon
-    )fun Siswa.toUIStateSiswa(isEntryValid: Boolean = false): UIStateSiswa = UIStateSiswa(
+    )
+
+    fun Siswa.toUIStateSiswa(isEntryValid: Boolean = false): UIStateSiswa = UIStateSiswa(
         detailSiswa = this.toDetailSiswa(),
         isEntryValid = isEntryValid
     )
@@ -50,5 +59,4 @@ class EntryViewModel(private val repositoriSiswa: RepositoriSiswa) : ViewModel()
         alamat = alamat,
         telpon = telpon
     )
-
 }

@@ -2,6 +2,7 @@ package com.example.myroomsatu.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -11,16 +12,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp // Diperlukan untuk 1.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myroomsatu.R
-import com.example.myroomsatu.view.viewmodel.DetailSiswa
-import com.example.myroomsatu.view.viewmodel.UIStateSiswa
-import com.example.myroomsatu.view.viewmodel.EntryViewModel
-import com.example.myroomsatu.view.navigasi.DestinasiEntry
-import com.example.myroomsatu.view.uikomponen.SiswaTopAppBar
-import com.example.myroomsatu.view.viewmodel.PenyediaViewModel
+import com.example.myroomsatu.R // Import ini HARUS ADA untuk R.dimen dan R.string
 import kotlinx.coroutines.launch
+import com.example.myroomsatu.viewmodel.EntryViewModel
+import com.example.myroomsatu.viewmodel.EntryViewModel.UIStateSiswa
+import com.example.myroomsatu.viewmodel.EntryViewModel.DetailSiswa
+import com.example.myroomsatu.view.route.DestinasiEntry
+import com.example.myroomsatu.viewmodel.PenyediaViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,8 +54,8 @@ fun EntrySiswaScreen(
                 }
             },
             modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
+                .padding(paddingValues = innerPadding)
+                .verticalScroll(state = rememberScrollState())
                 .fillMaxWidth()
         )
     }
@@ -67,12 +69,10 @@ fun EntrySiswaBody(
     modifier: Modifier = Modifier
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(
-            dimensionResource(id = R.dimen.padding_medium)
-        ),
-        modifier = modifier.padding(
-            dimensionResource(id = R.dimen.padding_medium)
-        )
+        // DIPERBAIKI: Menggunakan R.dimen.padding_large (20dp)
+        verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.padding_large)),
+        // DIPERBAIKI: Menggunakan R.dimen.padding_medium (16dp)
+        modifier = modifier.padding(all = dimensionResource(id = R.dimen.padding_medium))
     ) {
         FormInputSiswa(
             detailSiswa = uiStateSiswa.detailSiswa,
@@ -83,9 +83,10 @@ fun EntrySiswaBody(
         Button(
             onClick = onSaveClick,
             enabled = uiStateSiswa.isEntryValid,
+            shape = MaterialTheme.shapes.small,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(R.string.Submit))
+            Text(text = stringResource(R.string.btn_submit))
         }
     }
 }
@@ -100,33 +101,35 @@ fun FormInputSiswa(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(
-            dimensionResource(id = R.dimen.padding_medium)
-        )
+        // DIPERBAIKI: Menggunakan R.dimen.padding_medium (16dp)
+        verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.padding_medium))
     ) {
+        // Input Nama
         OutlinedTextField(
             value = detailSiswa.nama,
             onValueChange = { onValueChange(detailSiswa.copy(nama = it)) },
-            label = { Text(text = stringResource(R.string.NamaSiswa)) },
+            label = { Text(text = stringResource(R.string.nama)) },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
+        // Input Alamat
         OutlinedTextField(
             value = detailSiswa.alamat,
             onValueChange = { onValueChange(detailSiswa.copy(alamat = it)) },
-            label = { Text(text = stringResource(R.string.AlamatSiswa)) },
+            label = { Text(text = stringResource(R.string.alamat)) },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
+        // Input Telepon
         OutlinedTextField(
             value = detailSiswa.telpon,
             onValueChange = { onValueChange(detailSiswa.copy(telpon = it)) },
-            label = { Text(text = stringResource(R.string.TelponSiswa)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = { Text(text = stringResource(R.string.telpon)) },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
@@ -134,18 +137,17 @@ fun FormInputSiswa(
 
         if (enabled) {
             Text(
-                text = stringResource(R.string.requiredFields),
-                modifier = Modifier.padding(
-                    start = dimensionResource(id = R.dimen.padding_medium)
-                )
+                text = stringResource(R.string.required_field),
+                // DIPERBAIKI: Menggunakan R.dimen.padding_medium (16dp)
+                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
             )
         }
 
         HorizontalDivider(
-            modifier = Modifier.padding(
-                bottom = dimensionResource(id = R.dimen.padding_small)
-            ),
-            thickness = 1.dp, // langsung dp
+
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small)),
+            // DIPERBAIKI: Menggunakan 1.dp secara langsung karena tidak didefinisikan di dimens.xml
+            thickness = 1.dp,
             color = Color.Blue
         )
     }

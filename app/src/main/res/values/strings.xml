@@ -1,4 +1,5 @@
 <resources>
+    <string name="data_siswa">Data Siswa</string>
     <string name="app_name">My RoomSatu</string>
     <string name="entry_siswa">Tambah Siswa</string>
     <string name="deskripsi_no_item">Tidak ada data Siswa. Tap + untuk menambah data</string>

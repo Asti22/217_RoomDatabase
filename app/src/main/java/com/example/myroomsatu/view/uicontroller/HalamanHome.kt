@@ -1,4 +1,4 @@
-package com.example.myroomsatu.view.uicontroller
+package com.example.myroomsatu.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,19 +7,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myroomsatu.R
-import com.example.myroomsatu.navigation.DestinasiHome
-import com.example.myroomsatu.room.Siswa
-import com.example.myroomsatu.view.viewmodel.HomeViewModel
-import com.example.myroomsatu.view.viewmodel.PenyediaViewModel
+import com.example.myroomsatu.R // Import ini diperlukan untuk R.dimen dan R.string
+import com.example.myroomsatu.viewmodel.HomeViewModel
+import com.example.myroomsatu.viewmodel.PenyediaViewModel
+import com.example.myroomsatu.data.Siswa
+
+import com.example.myroomsatu.view.route.DestinasiHome // Import yang DIBUTUHKAN!
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +38,8 @@ fun HomeScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SiswaTopAppBar(
-                title = stringResource(DestinasiHome.titleRes),
+                // DestinasiHome sudah diimport, ini seharusnya bekerja
+                title = stringResource(id = DestinasiHome.titleRes),
                 canNavigateBack = false,
                 scrollBehavior = scrollBehavior
             )
@@ -43,22 +48,20 @@ fun HomeScreen(
             FloatingActionButton(
                 onClick = navigateToItemEntry,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(all = dimensionResource(id = R.dimen.padding_large))
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.TambahSiswa)
+                    contentDescription = stringResource(R.string.entry_siswa)
                 )
             }
-        }
+        },
     ) { innerPadding ->
-
         val uiStateSiswa by viewModel.homeUiState.collectAsState()
-
         BodyHome(
             itemSiswa = uiStateSiswa.listSiswa,
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(paddingValues = innerPadding)
                 .fillMaxSize()
         )
     }
@@ -71,21 +74,19 @@ fun BodyHome(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(8.dp)
+        modifier = modifier
     ) {
         if (itemSiswa.isEmpty()) {
             Text(
-                text = stringResource(R.string.TidakAdaDataSiswa),
+                text = stringResource(R.string.deskripsi_no_item),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge
             )
-            Text(
-                text = "Tap tombol + untuk menambah data",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium
-            )
         } else {
-            ListSiswa(itemSiswa = itemSiswa)
+            ListSiswa(
+                itemSiswa = itemSiswa,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+            )
         }
     }
 }
@@ -99,10 +100,10 @@ fun ListSiswa(
         items(
             items = itemSiswa,
             key = { it.id }
-        ) { siswa ->
+        ) { person ->
             DataSiswa(
-                siswa = siswa,
-                modifier = Modifier.padding(8.dp)
+                siswa = person,
+                modifier = Modifier.padding(all = dimensionResource(id = R.dimen.padding_small))
             )
         }
     }
@@ -114,38 +115,31 @@ fun DataSiswa(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(2.dp)
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier
+                .padding(all = dimensionResource(id = R.dimen.padding_large)),
+            verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.padding_small))
         ) {
-
-            // Row: Nama dan Telepon
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = siswa.nama,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
                 )
-
-                Spacer(modifier = Modifier.weight(1f))
-
+                Spacer(Modifier.weight(weight = 1f))
                 Icon(
                     imageVector = Icons.Default.Phone,
-                    contentDescription = null
+                    contentDescription = null,
                 )
-                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = siswa.telpon,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-
-            // Alamat
             Text(
                 text = siswa.alamat,
                 style = MaterialTheme.typography.titleMedium

@@ -1,6 +1,6 @@
 package com.example.myroomsatu.repositori
 
-import com.example.myroomsatu.room.Siswa
+import com.example.myroomsatu.data.Siswa
 import com.example.myroomsatu.room.SiswaDao
 import kotlinx.coroutines.flow.Flow
 

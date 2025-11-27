@@ -7,8 +7,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+// Import yang sudah ada
 import com.example.myroomsatu.view.route.DestinasiHome
 
+// --- IMPORT YANG DITAMBAHKAN UNTUK MEMPERBAIKI ERROR ---
+import com.example.myroomsatu.view.route.DestinasiEntry // 1. DestinasiEntry
+import com.example.myroomsatu.view.HomeScreen           // 2. HomeScreen
+import com.example.myroomsatu.view.EntrySiswaScreen     // 3. EntrySiswaScreen
+
+@Composable
 fun SiswaApp(navController: NavHostController = rememberNavController(), modifier: Modifier = Modifier) {
     HostNavigasi(navController = navController, modifier = modifier)
 }
