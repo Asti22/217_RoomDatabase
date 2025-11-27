@@ -4,5 +4,4 @@ import com.example.myroomsatu.R // Import ini diasumsikan dari gambar untuk R.st
 
 object DestinasiEntry : DestinasiNavigasi {
     override val route = "item_entry"
-    override val titleRes = R.string.TambahSiswa // Asumsi R.string.TambahSiswa ada
-}
+    override val titleRes = R.string.entry_siswa }
