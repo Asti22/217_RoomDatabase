@@ -33,3 +33,15 @@ fun HomeScreen(
                 )
             }
         },
+    ) { innerPadding ->
+        val uiStateSiswa by viewModel.homeUiState.collectAsState()
+
+        // Konten utama layar
+        BodyHome(
+            itemSiswa = uiStateSiswa.listSiswa, // Mengambil daftar siswa dari UI State
+            modifier = Modifier
+                .padding(paddingValues = innerPadding) // Menerapkan padding dari Scaffold
+                .fillMaxSize()
+        )
+    }
+}
