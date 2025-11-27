@@ -1,50 +1,69 @@
 package com.example.myroomsatu.view.uicontroller
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myroomsatu.R
+import com.example.myroomsatu.navigation.DestinasiHome
+import com.example.myroomsatu.room.Siswa
+import com.example.myroomsatu.view.viewmodel.HomeViewModel
+import com.example.myroomsatu.view.viewmodel.PenyediaViewModel
 
-@OptIn(markerClass = ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
-){
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SiswaTopAppBar(
-                title = stringResource(id = DestinasiHome.titleRes),
-                canNavigateBack = false, // Ini adalah layar utama, tidak ada tombol kembali.
+                title = stringResource(DestinasiHome.titleRes),
+                canNavigateBack = false,
                 scrollBehavior = scrollBehavior
             )
-},
+        },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = navigateToItemEntry, // Aksi: navigasi ke layar entry siswa
+                onClick = navigateToItemEntry,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(all = dimensionResource(id = 20.dp))
+                modifier = Modifier.padding(20.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.TambahSiswa) // Deskripsi aksesibilitas
+                    contentDescription = stringResource(R.string.TambahSiswa)
                 )
             }
-        },
+        }
     ) { innerPadding ->
+
         val uiStateSiswa by viewModel.homeUiState.collectAsState()
 
-        // Konten utama layar
         BodyHome(
-            itemSiswa = uiStateSiswa.listSiswa, // Mengambil daftar siswa dari UI State
+            itemSiswa = uiStateSiswa.listSiswa,
             modifier = Modifier
-                .padding(paddingValues = innerPadding) // Menerapkan padding dari Scaffold
+                .padding(innerPadding)
                 .fillMaxSize()
         )
     }
 }
+
 @Composable
 fun BodyHome(
     itemSiswa: List<Siswa>,
@@ -52,27 +71,25 @@ fun BodyHome(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ){
+        modifier = modifier.padding(8.dp)
+    ) {
         if (itemSiswa.isEmpty()) {
             Text(
-                text = stringResource(R.string.TidakAdaDataSiswa), // Pesan 'Data Kosong'
+                text = stringResource(R.string.TidakAdaDataSiswa),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
-                text = "Tap + untuk menambah data", // Instruksi tambahan
+                text = "Tap tombol + untuk menambah data",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium
             )
         } else {
-            ListSiswa(
-                itemSiswa = itemSiswa,
-                modifier = Modifier.padding(horizontal = dimensionResource(id = 8.dp))
-            )
+            ListSiswa(itemSiswa = itemSiswa)
         }
     }
 }
+
 @Composable
 fun ListSiswa(
     itemSiswa: List<Siswa>,
@@ -81,50 +98,54 @@ fun ListSiswa(
     LazyColumn(modifier = modifier) {
         items(
             items = itemSiswa,
-            key = { it.id })
-        { person ->
+            key = { it.id }
+        ) { siswa ->
             DataSiswa(
-                siswa = person,
-                modifier = Modifier.padding(all = dimensionResource(id = 8.dp))
+                siswa = siswa,
+                modifier = Modifier.padding(8.dp)
             )
         }
     }
 }
+
 @Composable
 fun DataSiswa(
     siswa: Siswa,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier = modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column(
-            modifier = Modifier
-                .padding(all = dimensionResource(id = 20.dp)),
-            verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = 8.dp))
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Baris 1: Nama dan Telepon
+
+            // Row: Nama dan Telepon
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Nama Siswa
                 Text(
                     text = siswa.nama,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleLarge
                 )
-                Spacer(Modifier.weight(weight = 1f)) // Spacer untuk mendorong item ke tepi
-                // Ikon dan Nomor Telepon
+
+                Spacer(modifier = Modifier.weight(1f))
+
                 Icon(
                     imageVector = Icons.Default.Phone,
-                    contentDescription = null, // Tidak perlu content description karena teks telepon sudah ada
+                    contentDescription = null
                 )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = siswa.telpon,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-            // Baris 2: Alamat
+
+            // Alamat
             Text(
                 text = siswa.alamat,
                 style = MaterialTheme.typography.titleMedium
@@ -132,4 +153,3 @@ fun DataSiswa(
         }
     }
 }
-
