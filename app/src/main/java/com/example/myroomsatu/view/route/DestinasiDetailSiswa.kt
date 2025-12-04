@@ -1,0 +1,12 @@
+package com.example.myroomsatu.view.route
+
+import com.example.myroomsatu.R
+
+object DestinasiDetailSiswa : DestinasiNavigasi {
+    override val route = "item_detail"
+    override val titleRes = R.string.detail_siswa
+
+    const val itemIdArg = "idSiswa"
+
+    val routeWithArgs = "$route/{$itemIdArg}"
+}

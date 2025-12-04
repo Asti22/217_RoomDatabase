@@ -1,4 +1,4 @@
-package com.example.myroomsisma.room
+package com.example.myroomsatu.room
 
 import androidx.room.Dao
 import androidx.room.Delete
