@@ -5,7 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.myroomsatu.repositori.RepositoriSiswa
-import com.example.myroomsatu.data.Siswa
+import com.example.myroomsatu.model.DetailSiswa
+import com.example.myroomsatu.model.UIStateSiswa
+import com.example.myroomsatu.model.toSiswa
+
+
+// Asumsi: DetailSiswa, UIStateSiswa, dan fungsi ekstensi didefinisikan di file lain
+// yang berada di package com.example.myroomsatu.viewmodel
 
 class EntryViewModel(private val repositoriSiswa: RepositoriSiswa) : ViewModel() {
 
@@ -25,38 +31,8 @@ class EntryViewModel(private val repositoriSiswa: RepositoriSiswa) : ViewModel()
 
     suspend fun saveSiswa() {
         if (validasiInput()) {
+            // Memanggil fungsi ekstensi toSiswa() yang didefinisikan di luar ViewModel
             repositoriSiswa.insertSiswa(siswa = uiStateSiswa.detailSiswa.toSiswa())
         }
     }
-
-    data class UIStateSiswa(
-        val detailSiswa: DetailSiswa = DetailSiswa(),
-        val isEntryValid: Boolean = false
-    )
-
-    data class DetailSiswa(
-        val id: Int = 0,
-        val nama: String = "",
-        val alamat: String = "",
-        val telpon: String = ""
-    )
-
-    fun DetailSiswa.toSiswa(): Siswa = Siswa(
-        id = id,
-        nama = nama,
-        alamat = alamat,
-        telpon = telpon
-    )
-
-    fun Siswa.toUIStateSiswa(isEntryValid: Boolean = false): UIStateSiswa = UIStateSiswa(
-        detailSiswa = this.toDetailSiswa(),
-        isEntryValid = isEntryValid
-    )
-
-    fun Siswa.toDetailSiswa(): DetailSiswa = DetailSiswa(
-        id = id,
-        nama = nama,
-        alamat = alamat,
-        telpon = telpon
-    )
 }
