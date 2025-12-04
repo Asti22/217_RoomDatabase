@@ -1,15 +1,14 @@
-package com.example.myroomsatu.viewmodel
+package com.example.myroomsatu.view.viewmodel.provider
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myroomsatu.repositori.RepositoriSiswa
 import com.example.myroomsatu.data.Siswa
+import com.example.myroomsatu.repositori.RepositoriSiswa
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
 
 class HomeViewModel(private val repositoriSiswa: RepositoriSiswa) : ViewModel() {
 
@@ -21,7 +20,7 @@ class HomeViewModel(private val repositoriSiswa: RepositoriSiswa) : ViewModel() 
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = TIMEOUT_MILLIS),
+                started = SharingStarted.Companion.WhileSubscribed(stopTimeoutMillis = TIMEOUT_MILLIS),
                 initialValue = HomeUiState()
             )
 

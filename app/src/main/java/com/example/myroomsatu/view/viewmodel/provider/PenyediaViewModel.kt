@@ -9,7 +9,7 @@ import com.example.myroomsatu.AplikasiSiswa
 import com.example.myroomsatu.view.viewmodel.provider.HomeViewModel
 import com.example.myroomsatu.view.viewmodel.provider.DetailViewModel
 import com.example.myroomsatu.view.viewmodel.provider.EditViewModel
-import com.example.myroomsatu.view.viewmodel.provider.EntryViewModel
+
 
 
 object PenyediaViewModel {
