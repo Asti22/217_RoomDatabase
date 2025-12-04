@@ -30,6 +30,7 @@ import com.example.myroomsatu.view.route.DestinasiHome // Import yang DIBUTUHKAN
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
+    navigateToItemDetail:(Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
@@ -61,6 +62,7 @@ fun HomeScreen(
         val uiStateSiswa by viewModel.homeUiState.collectAsState()
         BodyHome(
             itemSiswa = uiStateSiswa.listSiswa,
+            onSiswaClick = navigateToItemDetail,
             modifier = Modifier
                 .padding(paddingValues = innerPadding)
                 .fillMaxSize()
