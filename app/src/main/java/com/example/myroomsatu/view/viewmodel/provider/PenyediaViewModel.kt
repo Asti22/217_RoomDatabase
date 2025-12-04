@@ -1,37 +1,40 @@
 package com.example.myroomsatu.viewmodel
-
+import android.app.Application
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.myroomsatu.AplikasiSiswa // Pastikan import ini menunjuk ke package yang benar
+import com.example.myroomsatu.AplikasiSiswa
+import com.example.myroomsatu.view.viewmodel.provider.HomeViewModel
+import com.example.myroomsatu.view.viewmodel.provider.DetailViewModel
+import com.example.myroomsatu.view.viewmodel.provider.EditViewModel
+import com.example.myroomsatu.view.viewmodel.provider.EntryViewModel
 
-/**
- * Menyediakan Factory untuk kelas ViewModel apa pun yang membutuhkan RepositoriSiswa.
- */
+
 object PenyediaViewModel {
     val Factory = viewModelFactory {
-        // Factory untuk EntryViewModel
         initializer {
-            EntryViewModel(
-                // Memanggil repositoriSiswa yang disediakan oleh AppContainer
-                repositoriSiswa = aplikasiSiswa().container.repositoriSiswa
-            )
+            HomeViewModel(aplikasiSiswa().container.repositoriSiswa)
         }
 
-        // Factory untuk HomeViewModel
         initializer {
-            HomeViewModel(
-                repositoriSiswa = aplikasiSiswa().container.repositoriSiswa
-            )
+            EntryViewModel(aplikasiSiswa().container.repositoriSiswa)
+        }
+
+        initializer {
+            DetailViewModel(this.createSavedStateHandle(), aplikasiSiswa().container.repositoriSiswa)
+        }
+
+        initializer {
+            EditViewModel(this.createSavedStateHandle(), aplikasiSiswa().container.repositoriSiswa)
         }
     }
-}
 
-/**
- * Fungsi ekstensi untuk mendapatkan instance Application Class dari CreationExtras.
- * Ini adalah cara yang direkomendasikan untuk mengakses Application context di ViewModelFactory.
- */
-fun CreationExtras.aplikasiSiswa(): AplikasiSiswa =
-    (this[APPLICATION_KEY] as AplikasiSiswa)
+    /**
+     * Fungsi ekstensi query untuk objek [Application] dan mengembalikan sebuah instance dari
+     * [AplikasiSiswa].
+     */
+    fun CreationExtras.aplikasiSiswa(): AplikasiSiswa =
+        (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AplikasiSiswa)
+}

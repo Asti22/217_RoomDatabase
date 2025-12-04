@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myroomsatu.R // Import ini diperlukan untuk R.dimen dan R.string
-import com.example.myroomsatu.viewmodel.HomeViewModel
+import com.example.myroomsatu.view.viewmodel.provider.HomeViewModel
 import com.example.myroomsatu.viewmodel.PenyediaViewModel
 import com.example.myroomsatu.data.Siswa
 
